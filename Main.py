@@ -73,7 +73,7 @@ class Evaluator():
         if errType:
             errs = np.array([scipy.linalg.norm(dif[:,i]) for i in range(N+1)])
         else:
-            errs = np.array([scipy.linalg.norm(dif[:,i])/scipy.linalg.norm(ys[i]) for i in range(N+1)])
+            errs = np.array([scipy.linalg.norm(dif[:,i])/scipy.linalg.norm(ys[:,i]) for i in range(N+1)])
 
         return errs , solver.grid
     
@@ -156,7 +156,7 @@ plt.legend()
 plt.show()
 
 evaluator = Evaluator(ivp, ExplicitEuler)
-[grid, errs] = evaluator.errvstime(100, True)
+[errs, grid] = evaluator.errvstime(100, True)
 
 # Plot errors with log-scale on the y-axis
 plt.figure()
@@ -164,7 +164,7 @@ plt.semilogy(grid, errs)
 
 # Compute the error at t = T for different h corresponding to N = 2^3, 2^4, ..., 2^10
 Ns = 2**np.arange(3, 11)
-[hs, errs] = evaluator.errvsh(Ns,True)
+[errs, hs] = evaluator.errvsh(Ns,True)
 
 # Plot these errors in a log-log scale
 plt.figure()
