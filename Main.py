@@ -86,19 +86,10 @@ class Evaluator():
             [error, grid] = self.errvstime(Ns[i], errType)
             err = error[-1]
             errs[i] = err
-            hs[i] = Ns[i]/self.ivp.T
+            hs[i] = (self.ivp.T - self.ivp.t0) / Ns[i]
         return errs, hs
     
 
-
-
-
-
-
-        
-
-
-        
 
 
 #Explicit Euler Scalar plot
@@ -171,5 +162,6 @@ plt.figure()
 plt.loglog(hs, errs)
 
 # Plot a comparison line which is O(h)
-plt.loglog(hs, hs * 2 * errs[-1] / hs[-1])
+plt.loglog(hs, errs[-1] * hs / hs[-1], '--', label="O(h) Line")
+plt.legend()
 plt.show()
