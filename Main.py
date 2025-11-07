@@ -165,3 +165,62 @@ plt.loglog(hs, errs)
 plt.loglog(hs, errs[-1] * hs / hs[-1], '--', label="O(h) Line")
 plt.legend()
 plt.show()
+
+
+
+# =====We try for different lambda values=====
+
+lambdas = [-2.0, -0.1, 1.0] # Different values for λ 
+colors = ['b', 'r', 'g']
+y0_val = np.array([1.0])
+
+plt.figure(figsize=(10, 6))
+plt.title(f'Final Global Error vs. h (Explicit Euler Method)')
+plt.xlabel('Time Step h (log scale)')
+plt.ylabel('Final Error ||u(T)-y(T)|| (log scale)')
+plt.grid(True, which="both", ls="--")
+
+# 1. Plot error curves for different λ
+for i, lam in enumerate(lambdas):
+    A_scalar = np.array([[lam]])
+    ivp_scalar = LTE(t0=t0_val, T=T_val, y0=y0_val, A=A_scalar)
+    evaluator_scalar = Evaluator(ivp_scalar, ExplicitEuler)
+    [errs, hs] = evaluator_scalar.errvsh(Ns, True)
+    plt.loglog(hs, errs, marker='o', linestyle='-', color=colors[i], 
+               label=f'Error $\\lambda={lam}$')
+
+# 2. Plot the O(h) reference line.
+O_h_line = errs[-1] * (hs_ref / hs_ref[-1])
+plt.loglog(hs_ref, O_h_line, 'k--', label='Reference $O(h)$ (Slope -1)')
+
+plt.legend()
+plt.show()
+
+
+# Case 1: λ > 0 (Stable System)
+lam_stab = 8.0
+ivp_stab = LTE(t0=0, T=5, y0=np.array([2.0]), A=np.array([[lam_stab]]))
+evaluator_stab = Evaluator(ivp_stab, ExplicitEuler)
+N_time = 200 # Number of steps to resolve time evolution
+
+# Plot 1: Absolute Error vs. Time (semilogy)
+[errs_abs, grid] = evaluator_stab.errvstime(N_time, True)
+plt.figure(figsize=(10, 6))
+plt.semilogy(grid, errs_abs, label='Absolute Error')
+plt.title(f'Absolute Error vs. Time ($\\lambda={lam_stab}$, Stable)')
+plt.xlabel('Time t')
+plt.ylabel('Absolute Error ||u(t)-y(t)|| (log scale)')
+plt.grid(True, which="both", ls="--")
+plt.legend()
+plt.show()
+
+# Plot 2: Relative Error vs. Time (semilogy)
+[errs_rel, grid] = evaluator_stab.errvstime(N_time, False)
+plt.figure(figsize=(10, 6))
+plt.semilogy(grid, errs_rel, label='Relative Error')
+plt.title(f'Relative Error vs. Time ($\\lambda={lam_stab}$, Stable)')
+plt.xlabel('Time t')
+plt.ylabel('Relative Error (log scale)')
+plt.grid(True, which="both", ls="--")
+plt.legend()
+plt.show()
