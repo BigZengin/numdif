@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Nov  7 14:00:26 2025
-@author: diaso
-"""
 import numpy as np
 import scipy as sp
 import scipy.linalg
@@ -152,18 +147,12 @@ plt.show()
 A_test = np.array([[-1, 10], [0, -3]])
 y0_test = np.array([1, 1])
 t0_test = 0
-T_test = 10 # Set T=10 as required
-
-# Optional check: 
-# eigvals = scipy.linalg.eig(A_test)[0]
-# print(f"Eigenvalues of A_test: {eigvals}") 
+T_test = 10 
 
 ivp_test = LTE(t0=t0_test, T=T_test, y0=y0_test, A=A_test)
 evaluator_test = Evaluator(ivp_test, ExplicitEuler)
 
-# --- Subtask 7.3.1: errvsh (O(h) Convergence) ---
-
-# Recalculate hs_ref for T=10
+# Error vs hs
 hs_ref_test = (T_test - t0_test) / Ns 
 
 [errs_h, hs_h] = evaluator_test.errvsh(Ns, True) # Absolute Error
@@ -182,11 +171,11 @@ plt.grid(True, which="both", ls="--")
 plt.legend()
 plt.show()
 
-# --- Subtask 7.3.2: errvstime (Error vs. Time) ---
+#(Error vs. Time)
 
 N_time_test = 500 # More steps due to larger T
 
-# Plot 1: Absolute Error vs. Time (semilogy)
+# Plot 1: Absolute Error 
 [errs_time_abs, grid_time] = evaluator_test.errvstime(N_time_test, True)
 plt.figure(figsize=(10, 6))
 plt.semilogy(grid_time, errs_time_abs, label='Absolute Error')
@@ -197,7 +186,7 @@ plt.grid(True, which="both", ls="--")
 plt.legend()
 plt.show()
 
-# Plot 2: Relative Error vs. Time (semilogy)
+# Plot 2: Relative Error 
 [errs_time_rel, grid_time] = evaluator_test.errvstime(N_time_test, False)
 plt.figure(figsize=(10, 6))
 plt.semilogy(grid_time, errs_time_rel, label='Relative Error')
@@ -206,4 +195,5 @@ plt.xlabel('Time t')
 plt.ylabel('Relative Error (log scale)')
 plt.grid(True, which="both", ls="--")
 plt.legend()
+
 plt.show()
