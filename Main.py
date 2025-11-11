@@ -86,3 +86,16 @@ class Evaluator():
             errs[i] = err
             hs[i] = (self.ivp.T - self.ivp.t0) / Ns[i]  
         return errs, hs
+
+class ImplicitEuler(Solver):
+    def __init__(self, ivp, N):
+         super().__init__(ivp, N)
+        
+    def step(self, tn, un):
+        if hasattr(self.ivp, 'A'):
+            I = np.eye(len(un))
+            A = self.ivp.A
+            u_next = scipy.linalg.solve(I - self.h * A, un)
+        else:
+            raise Exception("You need to provide a matrix A")
+        return u_next
