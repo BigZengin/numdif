@@ -96,19 +96,8 @@ plt.title("Adaptive RK34 Step Size Evolution")
 plt.grid(True)
 
 
-
-
-Ns = 2**np.arange(3, 11)
-evaluator34 = Evaluator(ivp, RK34)
-[errs34, hs34] = evaluator34.errvsh(Ns, True)
-
-plt.figure()
-plt.loglog(hs34, errs34, 'o-', label="RK34 Error at T")
-plt.loglog(hs34, errs34[-1] * (hs34 / hs34[-1])**4, '--', label="O(h⁴)")
-plt.xlabel("Step size (h)")
-plt.ylabel("Error at T")
-plt.title("Global Error vs Step Size (RK34)")
-plt.legend()
-plt.grid(True)
-
 plt.show()
+
+
+
+
