@@ -25,6 +25,13 @@ class LTE(IVP):
         exponential = scipy.linalg.expm(t*self.A)
         return exponential @ self.y0
 
+class VanderPol(IVP):
+    def __init__(self, t0, T, y0, mu):
+        super().__init__(t0, T, y0)
+        self.mu = mu
+    def f(self, t, y):
+        return np.array([y[1],self.mu*(1-y[0]**2) * y[1]-y[0]])
+
 class Solver:
     def __init__(self, ivp, N: int, tol=1e-10, adaptive = False):
         self.ivp = ivp
