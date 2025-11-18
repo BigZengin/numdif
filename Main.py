@@ -32,6 +32,21 @@ class VanderPol(IVP):
     def f(self, t, y):
         return np.array([y[1],self.mu*(1-y[0]**2) * y[1]-y[0]])
 
+class LotkaVolterra(IVP):
+    def __init__(self, t0, T, y0, a, b, c, d):
+        super().__init__(t0, T, y0)
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+    
+    def f(self, t, u):
+        x = u[0]
+        y = u[1]
+        dxdt = self.a * x - self.b * x * y
+        dydt = self.c * x * y - self.d * y
+        return np.array([dxdt, dydt])
+
 class Solver:
     def __init__(self, ivp, N: int, tol=1e-10, adaptive = False):
         self.ivp = ivp
