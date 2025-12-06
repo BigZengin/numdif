@@ -108,7 +108,27 @@ class ExplicitEuler(Solver):
 
     def step(self, tn, un):
         return un + self.h * self.ivp.f(tn, un)
-    
+
+
+class TrapezoidalRule(Solver):
+    def __init__(self, ivp, N):
+        super().__init__(ivp, N)
+
+    def step(self, tn, un):
+        A = self.ivp.A
+        m = len(un)
+        I = np.eye(m)
+
+        # Calculate f(t_n, u_n)
+        fn = self.ivp.f(tn, un)
+
+        # Solve the system
+        lhs = I - (self.h / 2) * A
+        rhs = un + (self.h / 2) * fn
+        un1 = scipy.linalg.solve(lhs, rhs)
+        return un1
+
+
 class Evaluator():
     def __init__(self, ivp, solverType):
         self.ivp = ivp
